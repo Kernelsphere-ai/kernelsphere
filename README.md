@@ -37,9 +37,7 @@ That's it. The result lands in `final_output.json`.
 
 The agent screenshots the page and runs a JavaScript extraction to collect all visible interactive elements like buttons, inputs, links, dropdowns, anything clickable. Up to 200 elements get indexed and scored (submit buttons and search fields rank higher than decorative links). That list plus the screenshot goes to Gemini, which returns the next action as JSON: which element to interact with, what to do, and why.
 
-Playwright executes it. Then the agent checks whether anything actually changed in URL, DOM hash, new dialogs. If nothing changed, it knows the action failed. Two consecutive identical actions with no effect and the agent stops repeating itself and tries a different path.
-
-When the target information is on screen, a five-strategy extractor runs: semantic selectors first, then structural patterns, viewport scanning, regex over page text, and finally a full-page pass. The first strategy that returns a valid result wins. That result gets validated against the original task, and if it passes, the agent writes the final answer and stops. Every step follows the same cycle
+Playwright executes it. Then the agent checks whether anything actually changed in URL, DOM hash, new dialogs. If nothing changed, it knows the action failed. Two consecutive identical actions with no effect and the agent stops repeating itself and tries a different path. When the target information is on screen, a five-strategy extractor runs: semantic selectors first, then structural patterns, viewport scanning, regex over page text, and finally a full-page pass. The first strategy that returns a valid result wins. That result gets validated against the original task, and if it passes, the agent writes the final answer and stops. Every step follows the same cycle.
 
 ---
 
@@ -56,11 +54,7 @@ python main.py "Find papers on transformer attention published this month" \
   --headless \
   --max-steps 25
 
-# Google Flights (has a dedicated handler for date pickers and autocomplete)
-python main.py "Cheapest non-stop from Hyderabad to Berlin on March 15" \
-  --start-url "https://www.google.com/flights" \
-  --use-browserbase \
-  --max-steps 30
+
 ```
 
 **All flags**
@@ -165,3 +159,6 @@ python auto_eval.py \
 ## License
 
 MIT see [LICENSE](LICENSE)
+
+## Contributing
+Kernel Sphere is open source and maintained in public. Contributions are welcome across SDK features, docs, examples, and bug reports.
