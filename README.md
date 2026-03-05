@@ -6,6 +6,8 @@ No CSS selectors. No XPath. No scripts that break when a site redesigns. The age
 
 Built with Gemini 2.0 Flash (vision + text) and Playwright.
 
+Website: [kernelsphere.ai](https://kernelsphere.ai/)
+
 ---
 
 ## Quickstart
@@ -25,7 +27,8 @@ GOOGLE_API_KEY=your_gemini_api_key
 ```
 
 ```bash
-python main.py "Find the starting price of the MacBook Air M2" \
+python main.py run \
+  --task "Find the starting price of the MacBook Air M2" \
   --start-url "https://www.apple.com"
 ```
 
@@ -45,22 +48,23 @@ Playwright executes it. Then the agent checks whether anything actually changed 
 
 ```bash
 # Basic
-python main.py "Find a vegetarian lasagna with at least 4-star rating" \
+python main.py run \
+  --task "Find a vegetarian lasagna with at least 4-star rating" \
   --start-url "https://www.allrecipes.com"
 
 # Headless, more steps
-python main.py "Find papers on transformer attention published this month" \
+python main.py run \
+  --task "Find papers on transformer attention published this month" \
   --start-url "https://arxiv.org" \
   --headless \
   --max-steps 25
-
-
 ```
 
 **All flags**
 
 | Flag | Default | What it does |
 |---|---|---|
+| `--task` | required | Task description in plain English |
 | `--start-url` | required | Where to begin |
 | `--max-steps` | 30 | Give up after this many steps |
 | `--headless` | false | No browser window |
@@ -89,8 +93,6 @@ python main.py "Find papers on transformer attention published this month" \
 **Stagnation.** If the agent repeats the same action on the same element three times with no page change, it detects the loop and switches to a recovery prompt that pushes it toward a different approach.
 
 ---
-
-
 
 ## Parallel runs
 
@@ -153,8 +155,6 @@ python auto_eval.py \
   --api_model gpt-4-vision-preview \
   --max_attached_imgs 3
 ```
-
-
 
 ## License
 
