@@ -3,7 +3,7 @@ from pathlib import Path
 from typing import Dict, List
 
 
-def load_webvoyager_task(task_file: str) -> Dict:
+def load_task(task_file: str) -> Dict:
     with open(task_file, 'r', encoding='utf-8') as f:
         if task_file.endswith('.jsonl'):
             line = f.readline().strip()
@@ -14,7 +14,7 @@ def load_webvoyager_task(task_file: str) -> Dict:
     return normalize_task_data(data)
 
 
-def load_all_webvoyager_tasks(tasks_file: str) -> List[Dict]:
+def load_all_tasks(tasks_file: str) -> List[Dict]:
     tasks = []
     with open(tasks_file, 'r', encoding='utf-8') as f:
         for line in f:
@@ -43,13 +43,13 @@ def normalize_task_data(data: Dict) -> Dict:
     return normalized
 
 
-class WebVoyagerAdapter:
+class Adapter:
     
     def __init__(self, output_dir: str = "results"):
         self.output_dir = Path(output_dir)
         self.output_dir.mkdir(exist_ok=True)
     
-    def format_webvoyager_output(self, agent_history: Dict, task_data: Dict) -> Dict:
+    def format_output(self, agent_history: Dict, task_data: Dict) -> Dict:
         interact_messages = self._build_interact_messages(agent_history)
         
         task_name = f"task{task_data['web_name']}--{task_data['task_id']}"
@@ -64,7 +64,7 @@ class WebVoyagerAdapter:
             "total_steps": len(agent_history.get("steps", []))
         }
     
-    def save_webvoyager_output(self, output_data: Dict, task_data: Dict):
+    def save_output(self, output_data: Dict, task_data: Dict):
         task_dir = Path(output_data["directory"])
         
         interact_file = task_dir / "interact_messages.json"
@@ -116,3 +116,4 @@ class WebVoyagerAdapter:
             })
         
         return messages
+
