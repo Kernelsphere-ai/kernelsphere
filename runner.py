@@ -10,7 +10,7 @@ from dotenv import load_dotenv
 from agent import WebAutomationAgent
 from llm import GeminiLLM
 from stealth import configure_stealth_browser, get_random_user_agent, STEALTH_ARGS
-from webvoyager_adapter import WebVoyagerAdapter, normalize_task_data, load_all_webvoyager_tasks
+from adapter import Adapter, normalize_task_data, load_all_tasks
 from task_result_tracker import TaskResultTracker
 from task_logger import TaskLogger
 from answer_validator import AnswerValidator
@@ -24,15 +24,15 @@ logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
     handlers=[
         logging.StreamHandler(),
-        logging.FileHandler('webvoyager_run.log', mode='a')
+        logging.FileHandler('web_run.log', mode='a')
     ]
 )
 logger = logging.getLogger(__name__)
 
 
-async def run_webvoyager_task(
+async def run_task(
     task_data: dict,
-    adapter: WebVoyagerAdapter,
+    adapter: Adapter,
     task_tracker: TaskResultTracker,
     task_logger: TaskLogger,
     model: str = "gemini-2.0-flash",
@@ -48,7 +48,7 @@ async def run_webvoyager_task(
 ) -> dict:
     
     logger.info("="*80)
-    logger.info(f"Running WebVoyager Task: {task_data['web_name']}--{task_data['task_id']}")
+    logger.info(f"Running Task: {task_data['web_name']}--{task_data['task_id']}")
     logger.info(f"Question: {task_data['question']}")
     logger.info(f"Start URL: {task_data['start_url']}")
     logger.info(f"Proxy enabled: {use_proxy}")
@@ -255,7 +255,7 @@ async def run_webvoyager_task(
                     logger.warning(f"Error closing browser: {e}")
 
 
-async def run_webvoyager_benchmark(
+async def run_benchmark(
     tasks_file: str,
     output_dir: str = "webbench_results",
     model: str = "gemini-2.0-flash",
@@ -269,7 +269,7 @@ async def run_webvoyager_benchmark(
 ):
     
     logger.info("="*80)
-    logger.info("Starting WebVoyager Benchmark")
+    logger.info("Starting Benchmark")
     logger.info(f"Tasks file: {tasks_file}")
     logger.info(f"Output directory: {output_dir}")
     logger.info(f"Model: {model}")
@@ -282,14 +282,14 @@ async def run_webvoyager_benchmark(
     os.makedirs(output_dir, exist_ok=True)
     logger.info(f"Created output directory: {output_dir}")
     
-    adapter = WebVoyagerAdapter()
-    logger.info("WebVoyagerAdapter initialized")
+    adapter = Adapter()
+    logger.info("Adapter initialized")
     
     task_tracker = TaskResultTracker(output_dir)
     logger.info("TaskResultTracker initialized")
     
     logger.info(f"Loading tasks from: {tasks_file}")
-    tasks = load_all_webvoyager_tasks(tasks_file)
+    tasks = load_all_tasks(tasks_file)
     
     if limit:
         logger.info(f"Applying limit: {limit}")
@@ -318,7 +318,7 @@ async def run_webvoyager_benchmark(
         logger.info(f"TaskLogger initialized for task {i}")
         
         logger.info(f"Starting task: {task['web_name']}--{task['task_id']}")
-        result = await run_webvoyager_task(
+        result = await run_task(
             task_data=task,
             adapter=adapter,
             task_tracker=task_tracker,
@@ -377,10 +377,10 @@ async def run_webvoyager_benchmark(
 
 
 def main():
-    parser = argparse.ArgumentParser(description='WebVoyager Benchmark Runner')
+    parser = argparse.ArgumentParser(description=' Benchmark Runner')
     
     parser.add_argument('--tasks', type=str, required=True, help='Path to tasks JSONL file')
-    parser.add_argument('--output', type=str, default='webvoyager_results', help='Output directory')
+    parser.add_argument('--output', type=str, default='results', help='Output directory')
     parser.add_argument('--model', type=str, default='gemini-2.0-flash', help='Gemini model')
     parser.add_argument('--max-steps', type=int, default=30, help='Maximum steps per task')
     parser.add_argument('--headless', action='store_true', default=True, help='Run in headless mode')
@@ -394,7 +394,7 @@ def main():
     args = parser.parse_args()
     
     logger.info("="*80)
-    logger.info("WebVoyager Benchmark Runner - Starting")
+    logger.info("Benchmark Runner - Starting")
     logger.info(f"Arguments: {args}")
     logger.info("="*80)
     
@@ -404,7 +404,7 @@ def main():
     logger.info(f"Computed headless: {headless}")
     logger.info(f"Computed manual_captcha: {manual_captcha}")
     
-    asyncio.run(run_webvoyager_benchmark(
+    asyncio.run(run_benchmark(
         tasks_file=args.tasks,
         output_dir=args.output,
         model=args.model,
@@ -419,4 +419,5 @@ def main():
 
 
 if __name__ == '__main__':
+
     main()
