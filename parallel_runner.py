@@ -545,13 +545,13 @@ async def run_parallel_tasks(tasks: List[Dict[str, Any]], max_parallel: int = MA
     semaphore = asyncio.Semaphore(max_parallel)
     
     logger.info("="*80)
-    logger.info("PARALLEL WEBVOYAGER RUNNER")
+    logger.info("PARALLEL RUNNER")
     logger.info(f"Total tasks: {len(tasks)}")
     logger.info(f"Max parallel: {max_parallel}")
     logger.info("="*80)
     
     print(f'\n{"="*80}')
-    print(f'PARALLEL WEBVOYAGER RUNNER')
+    print(f'PARALLEL RUNNER')
     print(f'{"="*80}')
     print(f'Total tasks: {len(tasks)}')
     print(f'Max parallel: {max_parallel}')
