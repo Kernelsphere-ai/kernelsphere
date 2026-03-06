@@ -162,3 +162,6 @@ MIT see [LICENSE](LICENSE)
 
 ## Contributing
 Kernel Sphere is open source and maintained in public. Contributions are welcome across SDK features, docs, examples, and bug reports.
+
+## Contact
+For questions, feedback, or collaboration: lakshmiprasanna@kernelsphere.ai
